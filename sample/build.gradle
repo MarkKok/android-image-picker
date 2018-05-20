@@ -1,13 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    final sdk = rootProject.ext.sdk
 
-    compileSdkVersion sdk.compileSdk
+    compileSdkVersion 27
 
     defaultConfig {
-        minSdkVersion sdk.minSdk
-        targetSdkVersion sdk.targetSdk
+        minSdkVersion 14
+        targetSdkVersion 27
 
         applicationId "com.esafirm.imagepicker.sample"
 
@@ -40,7 +39,6 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:27.1.1'
 
     /* Development */
-    implementation project(':rximagepicker')
     implementation project(':imagepicker')
 
     /* Release Check */

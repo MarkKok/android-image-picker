@@ -1,15 +1,12 @@
 apply plugin: 'com.android.library'
-apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.github.dcendents.android-maven'
 
 android {
-    final sdk = rootProject.ext.sdk
 
-    compileSdkVersion sdk.compileSdk
+    compileSdkVersion 27
 
     defaultConfig {
-        minSdkVersion sdk.minSdk
-        targetSdkVersion sdk.targetSdk
+        minSdkVersion 14
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
     }

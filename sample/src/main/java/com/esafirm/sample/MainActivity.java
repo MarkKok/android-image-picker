@@ -9,15 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Switch;
 import android.widget.TextView;
+
 import com.esafirm.imagepicker.features.ImagePicker;
-import com.esafirm.imagepicker.features.ImagePickerConfigFactory;
-import com.esafirm.imagepicker.features.ImagePickerFragment;
 import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
-import com.esafirm.rximagepicker.RxImagePicker;
-import rx.Observable;
-import rx.functions.Action1;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         textView = findViewById(R.id.text_view);
 
         findViewById(R.id.button_pick_image).setOnClickListener(view -> start());
-        findViewById(R.id.button_pick_image_rx).setOnClickListener(view -> getImagePickerObservable().forEach(action));
+        //findViewById(R.id.button_pick_image_rx).setOnClickListener(view -> getImagePickerObservable().forEach(action));
         findViewById(R.id.button_intent).setOnClickListener(v -> startWithIntent());
         findViewById(R.id.button_camera).setOnClickListener(v -> captureImage());
 
@@ -59,12 +55,12 @@ public class MainActivity extends AppCompatActivity {
         ImagePicker.cameraOnly().start(this);
     }
 
-    Action1<List<Image>> action = this::printImages;
+    /*Action1<List<Image>> action = this::printImages;
 
     private Observable<List<Image>> getImagePickerObservable() {
         return RxImagePicker.getInstance()
                 .start(this, ImagePicker.create(this));
-    }
+    }*/
 
     private void startWithIntent() {
         startActivityForResult(ImagePicker.create(this)
