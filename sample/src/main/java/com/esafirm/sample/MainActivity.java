@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Switch;
 import android.widget.TextView;
 import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ImagePickerConfigFactory;
+import com.esafirm.imagepicker.features.ImagePickerFragment;
 import com.esafirm.imagepicker.features.IpCons;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
@@ -37,14 +39,10 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button_pick_image).setOnClickListener(view -> start());
         findViewById(R.id.button_pick_image_rx).setOnClickListener(view -> getImagePickerObservable().forEach(action));
         findViewById(R.id.button_intent).setOnClickListener(v -> startWithIntent());
-        findViewById(R.id.button_camera).setOnClickListener(v -> {
-            captureImage();
-        });
+        findViewById(R.id.button_camera).setOnClickListener(v -> captureImage());
 
         findViewById(R.id.button_launch_fragment)
-                .setOnClickListener(view -> getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, new MainFragment())
-                        .commitAllowingStateLoss());
+                .setOnClickListener(view -> startActivity(new Intent(this, FragmentPickerDemoActivity.class)));
     }
 
     @Override
