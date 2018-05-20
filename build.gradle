@@ -12,7 +12,6 @@ buildscript {
 
 ext {
     sdk = [
-            buildTools: '27.0.1',
             compileSdk: 27,
             targetSdk : 27,
             minSdk    : 14

@@ -6,7 +6,6 @@ android {
     final sdk = rootProject.ext.sdk
 
     compileSdkVersion sdk.compileSdk
-    buildToolsVersion sdk.buildTools
 
     defaultConfig {
         minSdkVersion sdk.minSdk
@@ -32,6 +31,7 @@ android {
     }
 
     resourcePrefix "ef_"
+    buildToolsVersion '27.0.3'
 }
 
 task sourcesJar(type: Jar) {
