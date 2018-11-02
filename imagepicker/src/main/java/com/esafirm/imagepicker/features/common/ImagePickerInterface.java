@@ -2,9 +2,9 @@ package com.esafirm.imagepicker.features.common;
 
 import com.esafirm.imagepicker.model.Image;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public interface ImagePickerInterface {
     void onImagePicked(int pickCount);
-    void returnPickedImages(List<Image> images);
+    void returnPickedImages(ArrayList<Image> images);
 }
