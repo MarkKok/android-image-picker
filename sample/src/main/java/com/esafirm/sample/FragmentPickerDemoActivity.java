@@ -1,6 +1,6 @@
 package com.esafirm.sample;
 
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,7 +11,7 @@ import com.esafirm.imagepicker.features.ImagePickerFragment;
 import com.esafirm.imagepicker.features.common.ImagePickerInterface;
 import com.esafirm.imagepicker.model.Image;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class FragmentPickerDemoActivity extends AppCompatActivity implements ImagePickerInterface{
 
@@ -35,7 +35,7 @@ public class FragmentPickerDemoActivity extends AppCompatActivity implements Ima
     }
 
     @Override
-    public void returnPickedImages(List<Image> images) {
+    public void returnPickedImages(ArrayList<Image> images) {
         Toast.makeText(this, "received " + images.size() + " image(s)", Toast.LENGTH_SHORT).show();
     }
 

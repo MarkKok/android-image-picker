@@ -4,7 +4,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import androidx.annotation.Nullable;
+
 import com.esafirm.imagepicker.features.common.ImageLoaderListener;
+import com.esafirm.imagepicker.helper.ImagePickerUtils;
 import com.esafirm.imagepicker.model.Folder;
 import com.esafirm.imagepicker.model.Image;
 
@@ -32,8 +35,8 @@ public class ImageFileLoader {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
     };
 
-    public void loadDeviceImages(final boolean isFolderMode, final boolean includeVideo, final ArrayList<File> excludedImages, final ImageLoaderListener listener) {
-        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, includeVideo, excludedImages, listener));
+    public void loadDeviceImages(final boolean isFolderMode, final boolean includeVideo, final boolean includeAnimation, final ArrayList<File> excludedImages, final ImageLoaderListener listener) {
+        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, includeVideo, includeAnimation, excludedImages, listener));
     }
 
     public void abortLoadImages() {
@@ -54,12 +57,14 @@ public class ImageFileLoader {
 
         private boolean isFolderMode;
         private boolean includeVideo;
+        private boolean includeAnimation;
         private ArrayList<File> exlucedImages;
         private ImageLoaderListener listener;
 
-        public ImageLoadRunnable(boolean isFolderMode, boolean includeVideo, ArrayList<File> excludedImages, ImageLoaderListener listener) {
+        public ImageLoadRunnable(boolean isFolderMode, boolean includeVideo, boolean includeAnimation, ArrayList<File> excludedImages, ImageLoaderListener listener) {
             this.isFolderMode = isFolderMode;
             this.includeVideo = includeVideo;
+            this.includeAnimation = includeAnimation;
             this.exlucedImages = excludedImages;
             this.listener = listener;
         }
@@ -99,11 +104,17 @@ public class ImageFileLoader {
                     String bucket = cursor.getString(cursor.getColumnIndex(projection[3]));
 
                     File file = makeSafeFile(path);
-                    if (file != null && file.exists()) {
+                    if (file != null) {
                         if (exlucedImages != null && exlucedImages.contains(file))
                             continue;
 
                         Image image = new Image(id, name, path);
+
+                        if (!includeAnimation) {
+                            if (ImagePickerUtils.isGifFormat(image))
+                                continue;
+                        }
+
                         temp.add(image);
 
                         if (folderMap != null) {
@@ -116,7 +127,7 @@ public class ImageFileLoader {
                         }
                     }
 
-                } while (cursor.moveToPrevious());
+                } while (cursor.moveToPrevious() && temp.size() < 99);
             }
             cursor.close();
 
@@ -130,6 +141,7 @@ public class ImageFileLoader {
         }
     }
 
+    @Nullable
     private static File makeSafeFile(String path) {
         if (path == null || path.isEmpty()) {
             return null;
@@ -140,5 +152,4 @@ public class ImageFileLoader {
             return null;
         }
     }
-
 }
