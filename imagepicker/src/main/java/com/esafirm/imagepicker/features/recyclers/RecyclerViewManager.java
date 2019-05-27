@@ -131,9 +131,14 @@ public class RecyclerViewManager {
     }
 
     public void setImageAdapter(List<Image> images) {
-        imageAdapter.setData(images);
-        setItemDecoration(imageColumns);
-        recyclerView.setAdapter(imageAdapter);
+        if (recyclerView.getAdapter() == null) {
+            imageAdapter.setData(images);
+            setItemDecoration(imageColumns);
+            recyclerView.setAdapter(imageAdapter);
+        } else {
+            imageAdapter.addData(images);
+            imageAdapter.notifyDataSetChanged();
+        }
     }
 
     public void setFolderAdapter(List<Folder> folders) {
@@ -187,4 +192,7 @@ public class RecyclerViewManager {
                 && (config.getReturnMode() != ReturnMode.ALL && config.getReturnMode() != ReturnMode.GALLERY_ONLY);
     }
 
+    public GridLayoutManager getLayoutManager() {
+        return layoutManager;
+    }
 }

@@ -46,38 +46,24 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         imageLoader.abortLoadImages();
     }
 
-    void loadImages(ImagePickerConfig config) {
+    void loadImages(ImagePickerConfig config, int offset, int pageSize) {
         if (!isViewAttached()) return;
 
         boolean isFolder = config.isFolderMode();
         boolean includeVideo = config.isIncludeVideo();
         ArrayList<File> excludedImages = config.getExcludedImages();
 
-        runOnUiIfAvailable(() -> getView().showLoading(true));
-
         imageLoader.loadDeviceImages(isFolder, includeVideo, false, excludedImages, new ImageLoaderListener() {
             @Override
             public void onImageLoaded(final List<Image> images, final List<Folder> folders) {
-                runOnUiIfAvailable(() -> {
-                    getView().showFetchCompleted(images, folders);
-
-                    final boolean isEmpty = folders != null
-                            ? folders.isEmpty()
-                            : images.isEmpty();
-
-                    if (isEmpty) {
-                        getView().showEmpty();
-                    } else {
-                        getView().showLoading(false);
-                    }
-                });
+                runOnUiIfAvailable(() -> getView().showFetchCompleted(images, folders));
             }
 
             @Override
             public void onFailed(final Throwable throwable) {
                 runOnUiIfAvailable(() -> getView().showError(throwable));
             }
-        });
+        }, offset, pageSize);
     }
 
     void onDoneSelectImages(List<Image> selectedImages) {

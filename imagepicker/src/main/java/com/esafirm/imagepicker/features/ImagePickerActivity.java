@@ -34,6 +34,7 @@ import com.esafirm.imagepicker.features.camera.CameraHelper;
 import com.esafirm.imagepicker.features.camera.DefaultCameraModule;
 import com.esafirm.imagepicker.features.cameraonly.CameraOnlyConfig;
 import com.esafirm.imagepicker.features.common.BaseConfig;
+import com.esafirm.imagepicker.features.recyclers.EndlessRecyclerViewScrollListener;
 import com.esafirm.imagepicker.features.recyclers.OnBackAction;
 import com.esafirm.imagepicker.features.recyclers.RecyclerViewManager;
 import com.esafirm.imagepicker.helper.ConfigUtils;
@@ -77,6 +78,8 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     private ContentObserver observer;
 
     private boolean isCameraOnly;
+    private int page = 0;
+    private static final int PAGE_SIZE = 50;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -178,6 +181,13 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
             }
         });
 
+        recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(recyclerViewManager.getLayoutManager()) {
+            @Override
+            public void onLoadMore() {
+                page++;
+                getData();
+            }
+        });
     }
 
     private void setupComponents() {
@@ -311,7 +321,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
         ImagePickerConfig config = getImagePickerConfig();
         presenter.abortLoad();
         if (config != null) {
-            presenter.loadImages(config);
+            presenter.loadImages(config, page * PAGE_SIZE, PAGE_SIZE);
         }
     }
 

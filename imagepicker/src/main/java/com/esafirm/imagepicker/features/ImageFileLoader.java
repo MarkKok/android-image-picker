@@ -3,6 +3,7 @@ package com.esafirm.imagepicker.features;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -35,8 +36,8 @@ public class ImageFileLoader {
             MediaStore.Images.Media.BUCKET_DISPLAY_NAME
     };
 
-    public void loadDeviceImages(final boolean isFolderMode, final boolean includeVideo, final boolean includeAnimation, final ArrayList<File> excludedImages, final ImageLoaderListener listener) {
-        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, includeVideo, includeAnimation, excludedImages, listener));
+    public void loadDeviceImages(final boolean isFolderMode, final boolean includeVideo, final boolean includeAnimation, final ArrayList<File> excludedImages, final ImageLoaderListener listener, final int offset, final int pageSize) {
+        getExecutorService().execute(new ImageLoadRunnable(isFolderMode, includeVideo, includeAnimation, excludedImages, listener, offset, pageSize));
     }
 
     public void abortLoadImages() {
@@ -60,13 +61,17 @@ public class ImageFileLoader {
         private boolean includeAnimation;
         private ArrayList<File> exlucedImages;
         private ImageLoaderListener listener;
+        private int offset;
+        private int pageSize;
 
-        public ImageLoadRunnable(boolean isFolderMode, boolean includeVideo, boolean includeAnimation, ArrayList<File> excludedImages, ImageLoaderListener listener) {
+        public ImageLoadRunnable(boolean isFolderMode, boolean includeVideo, boolean includeAnimation, ArrayList<File> excludedImages, ImageLoaderListener listener, int offset, int pageSize) {
             this.isFolderMode = isFolderMode;
             this.includeVideo = includeVideo;
             this.includeAnimation = includeAnimation;
             this.exlucedImages = excludedImages;
             this.listener = listener;
+            this.offset = offset;
+            this.pageSize = pageSize;
         }
 
         @Override
@@ -96,7 +101,8 @@ public class ImageFileLoader {
                 folderMap = new HashMap<>();
             }
 
-            if (cursor.moveToLast()) {
+            Log.d("ImageLoader", "loading image with offset " + offset);
+            if (cursor.moveToLast() && cursor.move(-1 * offset)) {
                 do {
                     long id = cursor.getLong(cursor.getColumnIndex(projection[0]));
                     String name = cursor.getString(cursor.getColumnIndex(projection[1]));
@@ -127,7 +133,7 @@ public class ImageFileLoader {
                         }
                     }
 
-                } while (cursor.moveToPrevious() && temp.size() < 99);
+                } while (cursor.moveToPrevious() && temp.size() < pageSize);
             }
             cursor.close();
 

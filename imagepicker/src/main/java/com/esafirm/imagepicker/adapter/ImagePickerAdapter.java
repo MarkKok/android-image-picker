@@ -113,6 +113,10 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         this.images.addAll(images);
     }
 
+    public void addData(List<Image> images) {
+        this.images.addAll(images);
+    }
+
     private void addSelected(final Image image, final int position) {
         mutateSelection(() -> {
             selectedImages.add(image);
